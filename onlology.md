@@ -8,12 +8,12 @@ Flujo: Se recupera el nombre e id del autor, se obtienen a partir de eso más pa
 
 ## Knowledge Graphs
 
-**Wikidata (RDF)** para las publicaciones
+**Wikidata (RDF)** para obtener la información de las publicaciones.
 - **Academic Publishing** (_Q5246046_) Nos permite extraer la información del paper asegurando que sea un paper cientifico.
 - **Main Subject** (_P921_) Nos permite obtener el "Topic" del paper en cuestion.
-- **member of** (_P463_) Nos permite obtener los datos relacionados de una persona con la organización a la que pertenece.
+- **member of** (_P463_) Nos permite obtener los datos relacionados de una persona con la organización o proyecto a los que pertenece.
 
-**ORCID (API)** para los autores
+**ORCID (API)** para la información relacionada con los autores.
 - **Nombre del autor** (published-name) Nos permite obtener el nombre del autor y el que ha usado para sus investigaciones.
 - **Listado Papers** (works) Nos permite obtener el listado de papers asociados a nuestro autor.
 - **Empleo** (employment) Nos permite saber información sobre la institucion que pertence y así poder usar (P463) para seguir obteniendo papers.
