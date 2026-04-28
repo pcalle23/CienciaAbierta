@@ -1,6 +1,11 @@
-# Aplicación
+### Aplicación
 
-Buscar información sobre los autores y otras publicaciones de los mismos autores.
+# Casos de Uso
+
+Descripción: Esta aplicación permite la búsqueda de documentos a partir de una "Persona". El objetivo es poder encontrar diferentes papers de un investigador a partir de un identificador único, permitiendonos además de listar sus papers, también encontrar sus afiliaciones y recurrencias en sus papers.
+
+Flujo: Se recupera el nombre e id del autor, se obtienen a partir de eso más papers asociados al autor a partir de las propiedades (obtenidas en wikidata) y finalmente con las APIs encontramos la lista de papers del autor.
+
 # Knowledge Graphs
 
 **Wikidata (RDF)** para las publicaciones
