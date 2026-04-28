@@ -18,7 +18,7 @@ Flujo: Se recupera el nombre e id del autor, se obtienen a partir de eso más pa
 - **Listado Papers** (works) Nos permite obtener el listado de papers asociados a nuestro autor.
 - **Empleo** (employment) Nos permite saber información sobre la institucion que pertence y así poder usar (P463) para seguir obteniendo papers.
 
-**SemOpenAlex (RDF)**
+**SemOpenAlex (RDF)** para abstracts
 - **Similitud abstracts** (abstract) Nos permite obtener una puntuación de parecidos entre papers.
   
 ## Diagrama
