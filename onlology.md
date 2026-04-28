@@ -14,7 +14,7 @@ Flujo: Se recupera el nombre e id del autor, se obtienen a partir de eso más pa
 - **member of** (_P463_) Nos permite obtener los datos relacionados de una persona con la organización a la que pertenece.
 
 **ORCID (API)** para los autores
-- **Nombre del autor** (credit-name) Nos permite obtener el nombre del autor y el que ha usado para sus investigaciones.
+- **Nombre del autor** (published-name) Nos permite obtener el nombre del autor y el que ha usado para sus investigaciones.
 - **Listado Papers** (works) Nos permite obtener el listado de papers asociados a nuestro autor.
 - **Empleo** (employment) Nos permite saber información sobre la institucion que pertence y así poder usar (P463) para seguir obteniendo papers.
 - **Similitud abstracts** (abstract) Nos permite obtener una puntuación de parecidos entre papers.
