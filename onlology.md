@@ -34,7 +34,6 @@ La aplicación se usa para visualizar un mapa de la investigación global (de lo
 
 ```mermaid
 erDiagram
-	erDiagram
 	PAPER {
 		string title
 		string doi
