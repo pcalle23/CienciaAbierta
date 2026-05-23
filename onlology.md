@@ -2,24 +2,33 @@
 
 ## Casos de Uso
 
-Descripción: Esta aplicación permite la búsqueda de documentos a partir de una "Persona". El objetivo es poder encontrar diferentes papers de un investigador a partir de un identificador único, permitiendonos además de listar sus papers, también encontrar sus afiliaciones y recurrencias en sus papers.
-
-Flujo: Se recupera el nombre e id del autor, se obtienen a partir de eso más papers asociados al autor a partir de las propiedades (obtenidas en wikidata) y finalmente con las APIs encontramos la lista de papers del autor.
+La aplicación se usa para visualizar un mapa de la investigación global (de los papers analizados). Su objetivo principal es visualizar las conexiones de organizaciones, proyectos, autores y áreas de investigación a través de distintos países. Esta aplicación permite visualizar un mapa geográfico para analizar la colaboración internacional, identificar las temáticas de investigación en regiones específicas y establecer relaciones de similitud entre las investigaciones desarrolladas por distintas organizaciones o naciones.
 
 ## Knowledge Graphs
 
-**Wikidata (RDF)** para obtener la información de las publicaciones.
-- **Academic Publishing** (_Q5246046_) Nos permite extraer la información del paper asegurando que sea un paper cientifico.
-- **Main Subject** (_P921_) Nos permite obtener el "Topic" del paper en cuestion.
-- **member of** (_P463_) Nos permite obtener los datos relacionados de una persona con la organización o proyecto a los que pertenece.
+**Wikidata (RDF)** Para el contexto de organizaciones
+- Organization type wdt:P31 (tipo de la organización)
+- Official name wdt:P1448 (nombre de la organización)
+- country wdt:P17 (país de la organización)
+**ORCID (API)** Para los autores
+- keywords (especialización del investigador)
+- address (país del investigador)
+**OpenAlex/SemOpenAlex** Para información de los papers y orcid
+- orcid (para obtener datos en ORCID)
+- cited_by_count (relevancia del paper)
+- has_concept (para obtener de qué trata un paper)
 
-**ORCID (API)** para la información relacionada con los autores.
-- **Nombre del autor** (published-name) Nos permite obtener el nombre del autor y el que ha usado para sus investigaciones.
-- **Listado Papers** (works) Nos permite obtener el listado de papers asociados a nuestro autor.
-- **Empleo** (employment) Nos permite saber información sobre la institucion que pertence y así poder usar (P463) para seguir obteniendo papers.
+# Flujo de trabajo
 
-**SemOpenAlex (RDF)** para abstracts
-- **Similitud abstracts** (abstract) Nos permite obtener una puntuación de parecidos entre papers.
+1. El sistema recibe un identificador de publicación inicial (arxivID), el cual se usa para obtener el DOI del artículo.
+
+2. Utilizando el DOI, se consulta la API de OpenAlex para extraer el número de citas, los conceptos clave del abstract y el listado de autores junto con sus respectivos identificadores ORCID.
+
+3. Se itera sobre los ORCID usando la API de ORCID para extraer el país del investigador y su área de trabajo.
+
+4. Las entidades reconocidas en el documento (instituciones, universidades o agencias financiadoras) se buscan en Wikidata para recuperar su tipo de organización, nombre oficial y país.
+
+5. Todos estos datos se integran en un grafo local.
   
 ## Diagrama
 
@@ -28,29 +37,50 @@ erDiagram
 	PAPER {
 		string title
 		string doi
-		string abstract
 		date publication_date
-	}
-	PERSON {
-		string name
-		string orcid_id
-	}
-	ORGANIZATION {
-		string name
-		string org_id
-	}
-	PROJECT {
-		string name
-	}
-	TOPIC {
-		string name
+		int cited_by_count(semopenalex)
+		string has_concept(semopenalex)
 	}
 	
-	PAPER ||--o{ TOPIC : belongs_to_topic
-	PAPER ||--o{ PAPER : similar_to
-	PAPER ||--o{ PAPER : abstract_similar_to_abstract
-	PAPER }|--o{ PERSON : has_author
-	PAPER }|--o{ ORGANIZATION : acknowledges
-	PERSON ||--o{ ORGANIZATION : employed_by
-	PROJECT }|--o{ PERSON : involves
+	PERSON {
+		string name
+		string orcid(ORCID)
+		string keyword(ORCID)
+		string address(ORCID)
+	}
+	
+	ORGANIZATION {
+		string official_name(wdt_1448)
+		string org_type(wdt_p31)
+		string country(wdt_p17)
+	}
+	
+	PROJECT {
+		string project_id
+	}
+	
+	TOPIC {
+		string topic_model
+	}
+	
+	BELONGS_TO_TOPIC{
+		float prob
+	}
+	
+	IS_SIMILAR{
+		float prob
+	}
+	
+	ACKNOWLEDGES{
+		
+	}
+	
+	BELONGS_TO_TOPIC ||--|| PAPER : ""
+	BELONGS_TO_TOPIC ||--|| TOPIC : ""
+	IS_SIMILAR ||--|| PAPER : ""
+	PAPER ||--|| IS_SIMILAR : ""
+	ACKNOWLEDGES ||--|| PERSON : ""
+	ACKNOWLEDGES ||--|| PROJECT : ""
+	ACKNOWLEDGES ||--|| ORGANIZATION : ""
+	PAPER ||--|| ACKNOWLEDGES : ""
 ```

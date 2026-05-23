@@ -9,15 +9,6 @@
 | 3 | Miguel Jimenez Sandoval | @MiguelJS-UPM |
 | 4 | Mario Jimenez Gordo | @02mario |
 
-
-### URLs propiedades Knowledge graphs
-| Propiedad | Identificador | URL |
-|---|---|---|
-|Academic Publishing |Q5246046| http://www.wikidata.org/entity/Q5246046 |
-|Main Subject (Topic)| P921 | http://www.wikidata.org/prop/direct/P921 |
-|Member of | P463 | http://www.wikidata.org/prop/direct/P463 |
-
-
 ### Usos de IA
 
 Se ha utilizado para:
