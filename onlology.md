@@ -10,9 +10,11 @@ La aplicación se usa para visualizar un mapa de la investigación global (de lo
 - Organization type wdt:P31 (tipo de la organización)
 - Official name wdt:P1448 (nombre de la organización)
 - country wdt:P17 (país de la organización)
+
 **ORCID (API)** Para los autores
 - keywords (especialización del investigador)
 - address (país del investigador)
+
 **OpenAlex/SemOpenAlex** Para información de los papers y orcid
 - orcid (para obtener datos en ORCID)
 - cited_by_count (relevancia del paper)
