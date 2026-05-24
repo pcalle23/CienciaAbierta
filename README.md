@@ -29,8 +29,7 @@ Para ejecutar el sistema desde cero, asegúrese de tener instalado [Docker](http
 1. **Clonar el repositorio:**
 
    ```
-   git clone [https://github.com/pcalle23/CienciaAbierta.git](https://github.com/pcalle23/CienciaAbierta.git)
-   cd entrega-final/app
+   git clone https://github.com/pcalle23/CienciaAbierta.git
    ```
 
 2. **Crear y activar entorno virtual:**

@@ -5,11 +5,11 @@
 
 <http://example.org/paper/2603.03072v1> a schema1:ScholarlyArticle ;
     ex:has_topic_assignment [ a ex:TopicAssignment ;
-            ex:assigns_topic <http://example.org/topic/Machine_Learning> ;
-            ex:probability_score "0.9133"^^xsd:float ],
-        [ a ex:TopicAssignment ;
             ex:assigns_topic <http://example.org/topic/Data_Science> ;
-            ex:probability_score "0.7241"^^xsd:float ] ;
+            ex:probability_score "0.7241"^^xsd:float ],
+        [ a ex:TopicAssignment ;
+            ex:assigns_topic <http://example.org/topic/Machine_Learning> ;
+            ex:probability_score "0.9133"^^xsd:float ] ;
     schema1:name "TIKZILLA: SCALING TEXT-TO-TIKZ WITH HIGH-QUALITY DATA AND REINFORCEMENT LEARNING"^^xsd:string .
 
 <http://example.org/paper/2603.03147v1> a schema1:ScholarlyArticle ;
