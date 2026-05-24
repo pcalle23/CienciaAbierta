@@ -1,0 +1,68 @@
+@prefix ex: <http://example.org/ontology/> .
+@prefix schema1: <http://schema.org/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://example.org/paper/2603.03072v1> a schema1:ScholarlyArticle ;
+    ex:has_topic_assignment [ a ex:TopicAssignment ;
+            ex:assigns_topic <http://example.org/topic/Machine_Learning> ;
+            ex:probability_score "0.9133"^^xsd:float ],
+        [ a ex:TopicAssignment ;
+            ex:assigns_topic <http://example.org/topic/Data_Science> ;
+            ex:probability_score "0.7241"^^xsd:float ] ;
+    schema1:name "TIKZILLA: SCALING TEXT-TO-TIKZ WITH HIGH-QUALITY DATA AND REINFORCEMENT LEARNING"^^xsd:string .
+
+<http://example.org/paper/2603.03147v1> a schema1:ScholarlyArticle ;
+    schema1:name "Agentic AI-based Coverage Closure for Formal Verification"^^xsd:string .
+
+<http://example.org/paper/2603.03175v1> a schema1:ScholarlyArticle ;
+    schema1:name "Saarthi for AGI: Towards Domain-Specific General Intelligence for Formal Verification"^^xsd:string .
+
+<http://example.org/paper/2603.03176v1> a schema1:ScholarlyArticle ;
+    schema1:name "FEAST: Retrieval-Augmented Multi-Hierarchical Food Classification for the FoodEx2 System"^^xsd:string .
+
+<http://example.org/paper/2603.03177v1> a schema1:ScholarlyArticle ;
+    ex:has_topic_assignment [ a ex:TopicAssignment ;
+            ex:assigns_topic <http://example.org/topic/Computer_Vision> ;
+            ex:probability_score "0.6422"^^xsd:float ],
+        [ a ex:TopicAssignment ;
+            ex:assigns_topic <http://example.org/topic/Open_Science> ;
+            ex:probability_score "0.6142"^^xsd:float ],
+        [ a ex:TopicAssignment ;
+            ex:assigns_topic <http://example.org/topic/Natural_Language_Processing> ;
+            ex:probability_score "0.9482"^^xsd:float ] ;
+    schema1:name "Neuro-Symbolic Artificial Intelligence: A Task-Directed Survey in the Black-Box Models Era"^^xsd:string .
+
+<http://example.org/paper/2603.03203v1> a schema1:ScholarlyArticle ;
+    ex:has_topic_assignment [ a ex:TopicAssignment ;
+            ex:assigns_topic <http://example.org/topic/Data_Science> ;
+            ex:probability_score "0.6154"^^xsd:float ] ;
+    schema1:name "No Memorization, No Detection: Output Distribution-Based Contamination Detection in Small Language Models"^^xsd:string .
+
+<http://example.org/paper/2603.03212v1> a schema1:ScholarlyArticle ;
+    schema1:name "NeuroSkill ™ : Proac0ve Real-Time Agen0c System Capable of Modeling Human State of Mind"^^xsd:string .
+
+<http://example.org/paper/2603.03233v1> a schema1:ScholarlyArticle ;
+    schema1:name "AI-FOR-SCIENCE LOW-CODE PLATFORM WITH BAYESIAN ADVERSARIAL MULTI-AGENT FRAME-WORK"^^xsd:string .
+
+<http://example.org/paper/2603.03252v1> a schema1:ScholarlyArticle ;
+    schema1:name "Valet: A Standardized Testbed of Traditional Imperfect-Information Card Games"^^xsd:string .
+
+<http://example.org/paper/2603.03258v1> a schema1:ScholarlyArticle ;
+    schema1:name "Published as a workshop paper in Lifelong Agents @ ICLR 2026 INHERITED GOAL DRIFT: CONTEXTUAL PRESSURE CAN UNDERMINE AGENTIC GOALS"^^xsd:string .
+
+<http://example.org/topic/Computer_Vision> a skos:Concept ;
+    skos:prefLabel "Computer Vision" .
+
+<http://example.org/topic/Machine_Learning> a skos:Concept ;
+    skos:prefLabel "Machine Learning" .
+
+<http://example.org/topic/Natural_Language_Processing> a skos:Concept ;
+    skos:prefLabel "Natural Language Processing" .
+
+<http://example.org/topic/Open_Science> a skos:Concept ;
+    skos:prefLabel "Open Science" .
+
+<http://example.org/topic/Data_Science> a skos:Concept ;
+    skos:prefLabel "Data Science" .
+

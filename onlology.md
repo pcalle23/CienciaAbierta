@@ -1,88 +1,85 @@
-# Aplicación
+# Aplicación y Grafo de Conocimiento
 
 ## Casos de Uso
 
-La aplicación se usa para visualizar un mapa de la investigación global (de los papers analizados). Su objetivo principal es visualizar las conexiones de organizaciones, proyectos, autores y áreas de investigación a través de distintos países. Esta aplicación permite visualizar un mapa geográfico para analizar la colaboración internacional, identificar las temáticas de investigación en regiones específicas y establecer relaciones de similitud entre las investigaciones desarrolladas por distintas organizaciones o naciones.
+El objetivo de este Knowledge Graph es descubrir los flujos de financiación y las redes de colaboración en la investigación.
+**Caso de uso principal:** Permitir a un investigador o institución identificar rápidamente qué agencias (gubernamentales o privadas) están financiando los proyectos más relevantes de una temática concreta (topics), y visualizar mediante un mapa qué países y organizaciones lideran dichas temáticas. Esto facilita la búsqueda de futuros socios estratégicos o fuentes de financiación.
 
-## Knowledge Graphs
+## Reutilización de Vocabularios Estándar (Extensión de clases)
 
-**Wikidata (RDF)** Para el contexto de organizaciones
-- Organization type wdt:P31 (tipo de la organización)
-- Official name wdt:P1448 (nombre de la organización)
-- country wdt:P17 (país de la organización)
+Para el modelado de los datos, hemos extendido vocabularios estándar de la Web Semántica:
 
-**ORCID (API)** Para los autores
-- keywords (especialización del investigador)
-- address (país del investigador)
+- **Paper:** `schema:ScholarlyArticle` / `fabio:ResearchPaper`
+- **Person (Author):** `foaf:Person` / `schema:Person`
+- **Organization:** `org:Organization` / `schema:Organization`
+- **Project:** `foaf:Project` / `schema:ResearchProject`
+- **Topic:** `skos:Concept`
 
-**OpenAlex/SemOpenAlex** Para información de los papers y orcid
-- orcid (para obtener datos en ORCID)
-- cited_by_count (relevancia del paper)
-- has_concept (para obtener de qué trata un paper)
+## Flujo de trabajo
 
-# Flujo de trabajo
+1. El sistema recibe un identificador de publicación inicial (arxivID) para obtener el DOI del artículo.
+2. Utilizando el DOI, se consulta la API de OpenAlex para extraer citas, conceptos y el listado de autores con ORCID.
+3. Se itera sobre los ORCID para extraer el país del investigador y su área de trabajo.
+4. **Hugging Face (IA):** Se procesan los _Abstracts_ para generar Tópicos (con probabilidad) y Similitud entre papers (con threshold) usando Modelos de Lenguaje.
+5. **Hugging Face (NER):** Se procesa la sección _Acknowledgements_ con Grobid para extraer Organizaciones, Personas y Proyectos involucrados en la financiación.
+6. Se enriquece la información de organizaciones con Wikidata.
+7. Los datos se integran en un grafo RDF (Apache Jena Fuseki) utilizando clases n-arias para relaciones complejas.
 
-1. El sistema recibe un identificador de publicación inicial (arxivID), el cual se usa para obtener el DOI del artículo.
-
-2. Utilizando el DOI, se consulta la API de OpenAlex para extraer el número de citas, los conceptos clave del abstract y el listado de autores junto con sus respectivos identificadores ORCID.
-
-3. Se itera sobre los ORCID usando la API de ORCID para extraer el país del investigador y su área de trabajo.
-
-4. Las entidades reconocidas en el documento (instituciones, universidades o agencias financiadoras) se buscan en Wikidata para recuperar su tipo de organización, nombre oficial y país.
-
-5. Todos estos datos se integran en un grafo local.
-  
 ## Diagrama
 
 ```mermaid
 erDiagram
-	PAPER {
+	%% Clases principales mapeadas a vocabularios estándar
+	SCHOLARLY_ARTICLE {
 		string title
 		string doi
 		date publication_date
-		int cited_by_count(semopenalex)
-		string has_concept(semopenalex)
+		int cited_by_count
 	}
-	
+
 	PERSON {
 		string name
-		string orcid(ORCID)
-		string keyword(ORCID)
-		string address(ORCID)
+		string orcid
+		string keywords
+		string country
 	}
-	
+
 	ORGANIZATION {
-		string official_name(wdt_1448)
-		string org_type(wdt_p31)
-		string country(wdt_p17)
+		string official_name
+		string org_type
+		string country
 	}
-	
+
 	PROJECT {
-		string project_id
+		string project_name
 	}
-	
+
 	TOPIC {
-		string topic_model
+		string topic_name
 	}
-	
-	BELONGS_TO_TOPIC{
-		float prob
+
+	%% Clases N-Arias para manejar probabilidades y thresholds
+	TOPIC_ASSIGNMENT {
+		float probability_score
 	}
-	
-	IS_SIMILAR{
-		float prob
+
+	SIMILARITY_LINK {
+		float similarity_score
 	}
-	
-	ACKNOWLEDGES{
-		
-	}
-	
-	BELONGS_TO_TOPIC ||--|| PAPER : ""
-	BELONGS_TO_TOPIC ||--|| TOPIC : ""
-	IS_SIMILAR ||--|| PAPER : ""
-	PAPER ||--|| IS_SIMILAR : ""
-	ACKNOWLEDGES ||--|| PERSON : ""
-	ACKNOWLEDGES ||--|| PROJECT : ""
-	ACKNOWLEDGES ||--|| ORGANIZATION : ""
-	PAPER ||--|| ACKNOWLEDGES : ""
+
+	%% Relaciones de cardinalidad corregidas (muchos a muchos / uno a muchos)
+	SCHOLARLY_ARTICLE ||--o{ PERSON : "has_author"
+	SCHOLARLY_ARTICLE ||--o{ ORGANIZATION : "affiliated_with"
+
+	%% Relaciones extraidas de los Acknowledgements (NER)
+	SCHOLARLY_ARTICLE }o--o{ PROJECT : "acknowledges_project"
+	SCHOLARLY_ARTICLE }o--o{ ORGANIZATION : "acknowledges_funding_from"
+	SCHOLARLY_ARTICLE }o--o{ PERSON : "acknowledges_person"
+
+	%% Conexiones con N-Arias
+	SCHOLARLY_ARTICLE ||--o{ TOPIC_ASSIGNMENT : "has_topic_assignment"
+	TOPIC_ASSIGNMENT }o--|| TOPIC : "assigns_topic"
+
+	SCHOLARLY_ARTICLE ||--o{ SIMILARITY_LINK : "source_paper"
+	SIMILARITY_LINK }o--|| SCHOLARLY_ARTICLE : "target_paper"
 ```
