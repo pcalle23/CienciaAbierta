@@ -1,13 +1,16 @@
-# Aplicación y Grafo de Conocimiento
+# Documentación de la Ontología: Global Research Mapping
 
-## Casos de Uso
+## 🎯 Aplicación y Casos de Uso
 
-El objetivo de este Knowledge Graph es descubrir los flujos de financiación y las redes de colaboración en la investigación.
-**Caso de uso principal:** Permitir a un investigador o institución identificar rápidamente qué agencias (gubernamentales o privadas) están financiando los proyectos más relevantes de una temática concreta (topics), y visualizar mediante un mapa qué países y organizaciones lideran dichas temáticas. Esto facilita la búsqueda de futuros socios estratégicos o fuentes de financiación.
+La aplicación se utiliza para visualizar un mapa interactivo de la investigación global a partir de los artículos científicos analizados. El objetivo principal es descubrir los flujos de financiación, las temáticas emergentes y las redes de colaboración internacional en la investigación.
 
-## Reutilización de Vocabularios Estándar (Extensión de clases)
+- **Caso de uso principal:** Permitir a investigadores, instituciones o agencias evaluadoras identificar rápidamente qué organismos (gubernamentales o privados) están financiando los proyectos más relevantes en una temática concreta (_topics_), y visualizar mediante un mapa qué países y organizaciones lideran dichas líneas de investigación. Esto facilita de manera directa la búsqueda de socios estratégicos y la identificación de futuras fuentes de financiación.
 
-Para el modelado de los datos, hemos extendido vocabularios estándar de la Web Semántica:
+---
+
+## 📚 Reutilización de Vocabularios Estándar
+
+Para garantizar la interoperabilidad y cumplir con las buenas prácticas de la Web Semántica y la Ciencia Abierta, la ontología extiende y reutiliza clases de vocabularios estándar consolidados:
 
 - **Paper:** `schema:ScholarlyArticle` / `fabio:ResearchPaper`
 - **Person (Author):** `foaf:Person` / `schema:Person`
@@ -15,71 +18,89 @@ Para el modelado de los datos, hemos extendido vocabularios estándar de la Web 
 - **Project:** `foaf:Project` / `schema:ResearchProject`
 - **Topic:** `skos:Concept`
 
-## Flujo de trabajo
+---
 
-1. El sistema recibe un identificador de publicación inicial (arxivID) para obtener el DOI del artículo.
-2. Utilizando el DOI, se consulta la API de OpenAlex para extraer citas, conceptos y el listado de autores con ORCID.
-3. Se itera sobre los ORCID para extraer el país del investigador y su área de trabajo.
-4. **Hugging Face (IA):** Se procesan los _Abstracts_ para generar Tópicos (con probabilidad) y Similitud entre papers (con threshold) usando Modelos de Lenguaje.
-5. **Hugging Face (NER):** Se procesa la sección _Acknowledgements_ con Grobid para extraer Organizaciones, Personas y Proyectos involucrados en la financiación.
-6. Se enriquece la información de organizaciones con Wikidata.
-7. Los datos se integran en un grafo RDF (Apache Jena Fuseki) utilizando clases n-arias para relaciones complejas.
+## ⚙️ Flujo de Trabajo del Pipeline
 
-## Diagrama
+1. **Ingesta:** El sistema recibe un identificador de publicación inicial (como un arXiv ID o el procesamiento directo del PDF con Grobid) para aislar los metadatos estructurales básicos.
+2. **Enriquecimiento Semántico:** Utilizando consultas estructuradas a las APIs de **OpenAlex** y **SemOpenAlex**, se recupera el número de citas globales (`citedByCount`), fechas de publicación y el listado completo de autores junto con sus respectivos identificadores normalizados **ORCID**.
+3. **Contextualización Institucional:** Se itera sobre las afiliaciones de los autores y se realizan consultas a la API de **Wikidata** para obtener las URIs oficiales de las organizaciones, sus tipos de entidad (`wdt:P31`) y los datos geopolíticos del país de origen.
+4. **Procesamiento de Texto con IA (Hugging Face):** Se analizan los _Abstracts_ de los artículos mediante un modelo de lenguaje para realizar clasificación _Zero-Shot_, asignando tópicos conceptuales con una puntuación de probabilidad.
+5. **Reconocimiento de Entidades Financieras (NER):** Se procesa el texto de la sección de agradecimientos (_Acknowledgements_) mediante un modelo Transformer especializado en extracción de entidades para identificar de forma automatizada personas, proyectos y organizaciones financiadoras.
+6. **Análisis de Similitud:** Se generan vectores de características (_embeddings_) de los textos para calcular la similitud semántica cruzada entre los artículos del dataset bajo un umbral (_threshold_) determinado.
+7. **Persistencia:** Todos los datos resultantes se estructuran e inyectan en el Triple Store de **Apache Jena Fuseki** utilizando clases n-arias para modelar relaciones complejas.
+
+---
+
+## 📊 Diagrama Conceptual (Modelo de Datos)
+
+El siguiente diagrama en formato Mermaid describe la estructura formal de la ontología, reflejando de manera estricta el uso de **Relaciones N-Arias** para soportar propiedades con valores ponderados (puntuaciones de similitud y porcentajes de probabilidad) y relaciones ternarias en los agradecimientos:
 
 ```mermaid
 erDiagram
-	%% Clases principales mapeadas a vocabularios estándar
-	SCHOLARLY_ARTICLE {
-		string title
-		string doi
-		date publication_date
-		int cited_by_count
-	}
+    %% ENTIDADES Y ATRIBUTOS PRINCIPALES
+    Paper {
+        string title
+        date publicationDate
+        integer citedByCount
+        string openAlexId
+    }
 
-	PERSON {
-		string name
-		string orcid
-		string keywords
-		string country
-	}
+    Person {
+        string name
+        string orcid
+        string hasConcept
+    }
 
-	ORGANIZATION {
-		string official_name
-		string org_type
-		string country
-	}
+    Organization {
+        string officialName
+        string organizationType
+        uri wikidataEntity
+    }
 
-	PROJECT {
-		string project_name
-	}
+    Country {
+        string countryName
+        string countryCode
+    }
 
-	TOPIC {
-		string topic_name
-	}
+    Project {
+        string projectId
+    }
 
-	%% Clases N-Arias para manejar probabilidades y thresholds
-	TOPIC_ASSIGNMENT {
-		float probability_score
-	}
+    Topic {
+        string topicModel
+    }
 
-	SIMILARITY_LINK {
-		float similarity_score
-	}
+    %% CLASES N-ARIAS (Modelado de relaciones complejas)
+    BelongsToTopicRelation {
+        float probability
+    }
 
-	%% Relaciones de cardinalidad corregidas (muchos a muchos / uno a muchos)
-	SCHOLARLY_ARTICLE ||--o{ PERSON : "has_author"
-	SCHOLARLY_ARTICLE ||--o{ ORGANIZATION : "affiliated_with"
+    SimilarityRelation {
+        float similarityScore
+    }
 
-	%% Relaciones extraidas de los Acknowledgements (NER)
-	SCHOLARLY_ARTICLE }o--o{ PROJECT : "acknowledges_project"
-	SCHOLARLY_ARTICLE }o--o{ ORGANIZATION : "acknowledges_funding_from"
-	SCHOLARLY_ARTICLE }o--o{ PERSON : "acknowledges_person"
+    AcknowledgementRelation {
+        string entityGroup
+    }
 
-	%% Conexiones con N-Arias
-	SCHOLARLY_ARTICLE ||--o{ TOPIC_ASSIGNMENT : "has_topic_assignment"
-	TOPIC_ASSIGNMENT }o--|| TOPIC : "assigns_topic"
+    %% RELACIONES BINARIAS ESTÁNDAR
+    Paper }o--o{ Person : "hasAuthor"
+    Person }o--o{ Organization : "affiliatedWith"
+    Organization }o--|| Country : "country"
 
-	SCHOLARLY_ARTICLE ||--o{ SIMILARITY_LINK : "source_paper"
-	SIMILARITY_LINK }o--|| SCHOLARLY_ARTICLE : "target_paper"
+    %% CONEXIONES A TRAVÉS DE RELACIONES N-ARIAS
+    Paper ||--o{ BelongsToTopicRelation : "hasTopicAssignment"
+    BelongsToTopicRelation }o--|| Topic : "assignedTopic"
+    BelongsToTopicRelation }o--|| Paper : "assignedPaper"
+
+    Paper ||--o{ SimilarityRelation : "hasSimilarityRelation"
+    SimilarityRelation }o--|| Paper : "sourcePaper"
+    SimilarityRelation }o--|| Paper : "targetPaper"
+
+    Paper ||--o{ AcknowledgementRelation : "hasAcknowledgement"
+    AcknowledgementRelation }o--|| Paper : "acknowledgementPaper"
+    AcknowledgementRelation }o--o| Person : "acknowledgesPerson"
+    AcknowledgementRelation }o--o| Organization : "acknowledgesOrganization"
+    AcknowledgementRelation }o--o| Project : "acknowledgesProject"
 ```
