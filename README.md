@@ -42,21 +42,33 @@ source venv/bin/activate  # (En Windows usar: venv\Scripts\activate)
 
 # Instalar librerías
 pip install -r requirements.txt
+```
+
 ### 2. Levantar los servidores (Docker)
+
+```
 Es necesario iniciar el motor de extracción de PDFs y la base de datos en grafo. Abra una terminal y ejecute:
 
-Bash
 # Servidor Grobid (Puerto 8070)
 docker run -d --rm --name grobid -p 8070:8070 lfoppiano/grobid:0.8.1
 
 # Servidor Apache Jena Fuseki (Puerto 3030)
 docker run -d --name fuseki -p 3030:3030 -e ADMIN_PASSWORD=admin secoresearch/fuseki
-### 3. Ejecutar el Pipeline de IA (Generación del Grafo)
-Ejecute el script principal para procesar los PDFs de la carpeta dataset/ y generar el archivo knowledge_graph.ttl.
+```
 
-Bash
+### 3. Ejecutar el Pipeline de IA (Generación del Grafo)
+
+```
+Ejecute el script principal para procesar los PDFs de la carpeta dataset/ y generar el archivo knowledge_graph.ttl.
+```
+
+```bash
 python main.py
+```
+
 ### 4. Cargar datos en Fuseki
+
+```
 Acceda a http://localhost:3030 (Usuario: admin, Contraseña: admin).
 
 Vaya a Manage datasets -> Add new dataset.
@@ -64,12 +76,19 @@ Vaya a Manage datasets -> Add new dataset.
 Nombre: ds | Tipo: In-memory (o Persistent).
 
 Suba el archivo knowledge_graph.ttl generado en el paso anterior.
+```
 
 ### 5. Iniciar el Dashboard Interactivo (Demo)
-Para lanzar la aplicación visual y realizar consultas al grafo:
 
-Bash
+```
+Para lanzar la aplicación visual y realizar consultas al grafo:
+```
+
+```bash
 python -m streamlit run app.py
+```
+
+```
 📊 Demostración del Caso de Uso
 La interfaz gráfica expone con éxito las entidades clave y temáticas más conectadas en el grafo, permitiendo comprobar la correcta integración semántica de los artículos científicos:
 

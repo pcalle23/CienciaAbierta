@@ -1,0 +1,16 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+  - family-names: "Calle Tercero"
+    given-names: "Pablo"
+  - family-names: "de la Luna Jimenez"
+    given-names: "Javier"
+  - family-names: "Jimenez Sandoval"
+    given-names: "Miguel"
+  - family-names: "Jimenez Gordo"
+    given-names: "Mario"
+title: "Artificial Intelligence And Open Science In Research Software Engineering"
+version: "1.0.0"
+date-released: "2026-05-25"
+repository-code: "https://github.com/pcalle23/CienciaAbierta.git"
+license: "MIT"
