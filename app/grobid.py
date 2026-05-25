@@ -61,7 +61,7 @@ def extract_paper_info(xml_content):
     ack_elem = root.find('.//tei:div[@type="acknowledgement"]', ns)    
     ack_text = ""
     if ack_elem is not None:
-        ack_text = ''.join(ack_elem.text).strip()
+        ack_text = ''.join(ack_elem.itertext()).strip()
     
     return {
         'title': title,
