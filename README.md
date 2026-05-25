@@ -11,7 +11,7 @@
 
 ## Descripción del Proyecto
 
-Este proyecto desarrolla un **Knowledge Graph (Grafo de Conocimiento)** que integra datos de investigación científica mediante el uso de Inteligencia Artificial y Web Semántica. El sistema procesa automáticamente artículos científicos (PDFs) para extraer metadatos, identificar entidades financiadoras, asignar tópicos mediante modelos de lenguaje y establecer redes de colaboración internacional.
+Este proyecto desarrolla un **Knowledge Graph (Grafo de Conocimiento)** que integra datos de investigación científica mediante el uso de Inteligencia Artificial y Web Semántica. El sistema procesa automáticamente 30 artículos científicos (PDFs) para extraer metadatos, identificar entidades financiadoras, asignar tópicos mediante modelos de lenguaje y establecer redes de colaboración internacional. Además, cuenta con una interfaz visual para la consulta interactiva de los datos.
 
 ## Arquitectura y Tecnologías
 
@@ -21,44 +21,62 @@ Hemos implementado una arquitectura basada en microservicios:
 - **Inteligencia Artificial:** Modelos de [Hugging Face](https://huggingface.co/) (BERT para NER, SentenceTransformers para similitud y BART para clasificación de tópicos).
 - **Integración de Datos:** Consultas en tiempo real a APIs de [OpenAlex](https://openalex.org/), [ORCID](https://orcid.org/) y [Wikidata](https://www.wikidata.org/).
 - **Modelado Semántico:** Generación de grafos en formato Turtle (`.ttl`) cumpliendo estándares W3C (schema.org, FOAF, ORG).
+- **Almacenamiento y Consulta:** Servidor [Apache Jena Fuseki](https://jena.apache.org/documentation/fuseki2/) para alojar el grafo.
+- **Visualización:** [Streamlit](https://streamlit.io/) para el dashboard interactivo y consultas SPARQL.
+
+---
 
 ## Instalación y Ejecución
 
 Para ejecutar el sistema desde cero, asegúrese de tener instalado [Docker](https://www.docker.com/) y Python 3.12+.
 
-1. **Clonar el repositorio:**
+### 1. Clonar el repositorio e instalar dependencias
 
-   ```
-   git clone https://github.com/pcalle23/CienciaAbierta.git
-   ```
+```bash
+git clone https://github.com/pcalle23/CienciaAbierta.git
+cd CienciaAbierta
 
-2. **Crear y activar entorno virtual:**
+# Crear y activar entorno virtual
+python3 -m venv venv
+source venv/bin/activate  # (En Windows usar: venv\Scripts\activate)
 
-   ```
-   python3 -m venv venv
-   source venv/bin/activate  # (En Windows usar venv\Scripts\activate)
-   ```
+# Instalar librerías
+pip install -r requirements.txt
+### 2. Levantar los servidores (Docker)
+Es necesario iniciar el motor de extracción de PDFs y la base de datos en grafo. Abra una terminal y ejecute:
 
-3. **Instalar dependencias:**
+Bash
+# Servidor Grobid (Puerto 8070)
+docker run -d --rm --name grobid -p 8070:8070 lfoppiano/grobid:0.8.1
 
-   ```
-   pip install -r requirements.txt
-   ```
+# Servidor Apache Jena Fuseki (Puerto 3030)
+docker run -d --name fuseki -p 3030:3030 -e ADMIN_PASSWORD=admin secoresearch/fuseki
+### 3. Ejecutar el Pipeline de IA (Generación del Grafo)
+Ejecute el script principal para procesar los PDFs de la carpeta dataset/ y generar el archivo knowledge_graph.ttl.
 
-4. **Levantar el servidor Grobid (Docker):**
+Bash
+python main.py
+### 4. Cargar datos en Fuseki
+Acceda a http://localhost:3030 (Usuario: admin, Contraseña: admin).
 
-   ```
-   docker run -t --rm -p 8070:8070 lfoppiano/grobid:0.8.1
-   ```
+Vaya a Manage datasets -> Add new dataset.
 
-5. **Ejecutar el pipeline:**
-   ```
-   python main.py
-   ```
+Nombre: ds | Tipo: In-memory (o Persistent).
 
-### Usos de IA
+Suba el archivo knowledge_graph.ttl generado en el paso anterior.
 
-Se ha utilizado para:
+### 5. Iniciar el Dashboard Interactivo (Demo)
+Para lanzar la aplicación visual y realizar consultas al grafo:
 
-- Asegurar que las propiedades no son redundantes entre ellas y son coherentes con el diagrama.
-- Asegurar que las relaciones entre las entidades son correctas.
+Bash
+python -m streamlit run app.py
+📊 Demostración del Caso de Uso
+La interfaz gráfica expone con éxito las entidades clave y temáticas más conectadas en el grafo, permitiendo comprobar la correcta integración semántica de los artículos científicos:
+
+Usos de IA en el desarrollo
+Se ha utilizado Inteligencia Artificial como asistencia para:
+
+Asegurar que las propiedades no son redundantes entre ellas y son coherentes con el diagrama.
+
+Asegurar que las relaciones entre las entidades son correctas.
+```
