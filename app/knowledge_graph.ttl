@@ -1,0 +1,170 @@
+@prefix ex: <http://example.org/ontology/> .
+@prefix schema1: <http://schema.org/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://example.org/paper/2603.03072v1> a schema1:ScholarlyArticle ;
+    ex:has_topic_assignment [ a ex:TopicAssignment ;
+            ex:assigns_topic <http://example.org/topic/Machine_Learning> ;
+            ex:probability_score "0.9133"^^xsd:float ],
+        [ a ex:TopicAssignment ;
+            ex:assigns_topic <http://example.org/topic/Data_Science> ;
+            ex:probability_score "0.7241"^^xsd:float ] ;
+    schema1:name "TIKZILLA: SCALING TEXT-TO-TIKZ WITH HIGH-QUALITY DATA AND REINFORCEMENT LEARNING"^^xsd:string .
+
+<http://example.org/paper/2603.03147v1> a schema1:ScholarlyArticle ;
+    schema1:name "Agentic AI-based Coverage Closure for Formal Verification"^^xsd:string .
+
+<http://example.org/paper/2603.03175v1> a schema1:ScholarlyArticle ;
+    schema1:name "Saarthi for AGI: Towards Domain-Specific General Intelligence for Formal Verification"^^xsd:string .
+
+<http://example.org/paper/2603.03176v1> a schema1:ScholarlyArticle ;
+    schema1:name "FEAST: Retrieval-Augmented Multi-Hierarchical Food Classification for the FoodEx2 System"^^xsd:string .
+
+<http://example.org/paper/2603.03177v1> a schema1:ScholarlyArticle ;
+    ex:has_topic_assignment [ a ex:TopicAssignment ;
+            ex:assigns_topic <http://example.org/topic/Computer_Vision> ;
+            ex:probability_score "0.6422"^^xsd:float ],
+        [ a ex:TopicAssignment ;
+            ex:assigns_topic <http://example.org/topic/Open_Science> ;
+            ex:probability_score "0.6142"^^xsd:float ],
+        [ a ex:TopicAssignment ;
+            ex:assigns_topic <http://example.org/topic/Natural_Language_Processing> ;
+            ex:probability_score "0.9482"^^xsd:float ] ;
+    schema1:name "Neuro-Symbolic Artificial Intelligence: A Task-Directed Survey in the Black-Box Models Era"^^xsd:string .
+
+<http://example.org/paper/2603.03203v1> a schema1:ScholarlyArticle ;
+    ex:has_topic_assignment [ a ex:TopicAssignment ;
+            ex:assigns_topic <http://example.org/topic/Data_Science> ;
+            ex:probability_score "0.6154"^^xsd:float ] ;
+    schema1:name "No Memorization, No Detection: Output Distribution-Based Contamination Detection in Small Language Models"^^xsd:string .
+
+<http://example.org/paper/2603.03212v1> a schema1:ScholarlyArticle ;
+    schema1:name "NeuroSkill ™ : Proac0ve Real-Time Agen0c System Capable of Modeling Human State of Mind"^^xsd:string .
+
+<http://example.org/paper/2603.03233v1> a schema1:ScholarlyArticle ;
+    schema1:name "AI-FOR-SCIENCE LOW-CODE PLATFORM WITH BAYESIAN ADVERSARIAL MULTI-AGENT FRAME-WORK"^^xsd:string .
+
+<http://example.org/paper/2603.03252v1> a schema1:ScholarlyArticle ;
+    schema1:name "Valet: A Standardized Testbed of Traditional Imperfect-Information Card Games"^^xsd:string .
+
+<http://example.org/paper/2603.03258v1> a schema1:ScholarlyArticle ;
+    schema1:name "Published as a workshop paper in Lifelong Agents @ ICLR 2026 INHERITED GOAL DRIFT: CONTEXTUAL PRESSURE CAN UNDERMINE AGENTIC GOALS"^^xsd:string .
+
+<http://example.org/paper/2605.23510v1> a schema1:ScholarlyArticle ;
+    schema1:name "Learning partially observed systems with neural Hamiltonian ordinary differential equations"^^xsd:string .
+
+<http://example.org/paper/2605.23522v1> a schema1:ScholarlyArticle ;
+    schema1:name "PRECISE: SDE-Consistent Stochastic Sampling for RL Post-Training of Flow-Matching Models"^^xsd:string .
+
+<http://example.org/paper/2605.23540v1> a schema1:ScholarlyArticle ;
+    ex:has_topic_assignment [ a ex:TopicAssignment ;
+            ex:assigns_topic <http://example.org/topic/Data_Science> ;
+            ex:probability_score "0.7193"^^xsd:float ] ;
+    schema1:name "When One Point Is Not Enough: Addressing Ambiguous Instances in Dimensionality Reduction by Splitting"^^xsd:string .
+
+<http://example.org/paper/2605.23551v1> a schema1:ScholarlyArticle ;
+    ex:has_topic_assignment [ a ex:TopicAssignment ;
+            ex:assigns_topic <http://example.org/topic/Open_Science> ;
+            ex:probability_score "0.7331"^^xsd:float ],
+        [ a ex:TopicAssignment ;
+            ex:assigns_topic <http://example.org/topic/Machine_Learning> ;
+            ex:probability_score "0.7207"^^xsd:float ] ;
+    schema1:name "Goal-Conditioned Agents that Learn Everything All at Once"^^xsd:string .
+
+<http://example.org/paper/2605.23556v1> a schema1:ScholarlyArticle ;
+    schema1:name "Is Dimensionality a Barrier for Retrieval Models?"^^xsd:string .
+
+<http://example.org/paper/2605.23563v1> a schema1:ScholarlyArticle ;
+    ex:has_topic_assignment [ a ex:TopicAssignment ;
+            ex:assigns_topic <http://example.org/topic/Machine_Learning> ;
+            ex:probability_score "0.9756"^^xsd:float ] ;
+    schema1:name "MARS: Magnitude-Aware Rank Statistics"^^xsd:string .
+
+<http://example.org/paper/2605.23565v1> a schema1:ScholarlyArticle ;
+    schema1:name "Understanding Goal Generalisation in Sequential Reinforcement Learning"^^xsd:string .
+
+<http://example.org/paper/2605.23574v1> a schema1:ScholarlyArticle ;
+    schema1:name "Push Your Agent: Measuring and Enforcing Quantitative Goal Persistence in Long-Horizon LLM Agents"^^xsd:string .
+
+<http://example.org/paper/2605.23595v1> a schema1:ScholarlyArticle ;
+    ex:has_topic_assignment [ a ex:TopicAssignment ;
+            ex:assigns_topic <http://example.org/topic/Data_Science> ;
+            ex:probability_score "0.7377"^^xsd:float ],
+        [ a ex:TopicAssignment ;
+            ex:assigns_topic <http://example.org/topic/Machine_Learning> ;
+            ex:probability_score "0.8924"^^xsd:float ] ;
+    schema1:name "Cost-Effective Model Evaluation with Meta-Learning"^^xsd:string .
+
+<http://example.org/paper/2605.23603v1> a schema1:ScholarlyArticle ;
+    schema1:name "Preisach Attention: A Hysteretic Model of Sequential Memory"^^xsd:string .
+
+<http://example.org/paper/2605.23605v1> a schema1:ScholarlyArticle ;
+    ex:has_topic_assignment [ a ex:TopicAssignment ;
+            ex:assigns_topic <http://example.org/topic/Machine_Learning> ;
+            ex:probability_score "0.8605"^^xsd:float ],
+        [ a ex:TopicAssignment ;
+            ex:assigns_topic <http://example.org/topic/Data_Science> ;
+            ex:probability_score "0.6117"^^xsd:float ] ;
+    schema1:name "DiLaDiff: Distilled Latent-Augmented Diffusion for Language Modeling"^^xsd:string .
+
+<http://example.org/paper/2605.23632v1> a schema1:ScholarlyArticle ;
+    ex:has_topic_assignment [ a ex:TopicAssignment ;
+            ex:assigns_topic <http://example.org/topic/Data_Science> ;
+            ex:probability_score "0.7038"^^xsd:float ],
+        [ a ex:TopicAssignment ;
+            ex:assigns_topic <http://example.org/topic/Open_Science> ;
+            ex:probability_score "0.7326"^^xsd:float ] ;
+    schema1:name "Valid and Expressive Copulas for Irregular Multivariate Time Series"^^xsd:string .
+
+<http://example.org/paper/2605.23689v1> a schema1:ScholarlyArticle ;
+    ex:has_topic_assignment [ a ex:TopicAssignment ;
+            ex:assigns_topic <http://example.org/topic/Machine_Learning> ;
+            ex:probability_score "0.8057"^^xsd:float ] ;
+    schema1:name "Optimization of randomized neural networks for transfer operator approximation"^^xsd:string .
+
+<http://example.org/paper/2605.23744v1> a schema1:ScholarlyArticle ;
+    ex:has_topic_assignment [ a ex:TopicAssignment ;
+            ex:assigns_topic <http://example.org/topic/Data_Science> ;
+            ex:probability_score "0.8013"^^xsd:float ] ;
+    schema1:name "Contrast to Detect: Dynamic Graph Contrastive Regularization for Unsupervised Anomaly Detection in Multivariate Time Series"^^xsd:string .
+
+<http://example.org/paper/2605.23751v1> a schema1:ScholarlyArticle ;
+    schema1:name "Approaching I/O-optimality for Approximate Attention"^^xsd:string .
+
+<http://example.org/paper/2605.23754v1> a schema1:ScholarlyArticle ;
+    schema1:name "LLM-DRIVEN DESIGN OF PHYSICS-CONSTRAINED CONSTITUTIVE MODELS: TWO AGENTS ARE BETTER THAN ONE"^^xsd:string .
+
+<http://example.org/paper/2605.23825v1> a schema1:ScholarlyArticle ;
+    ex:has_topic_assignment [ a ex:TopicAssignment ;
+            ex:assigns_topic <http://example.org/topic/Machine_Learning> ;
+            ex:probability_score "0.855"^^xsd:float ] ;
+    schema1:name "It's the Humans, Not the Data: Geopolitical Bias in LLMs Originates in Post-Training, Amplified by the Language of the Prompt"^^xsd:string .
+
+<http://example.org/paper/2605.23857v1> a schema1:ScholarlyArticle ;
+    schema1:name "Strong Teacher Not Needed? On Distillation in LLM Pretraining"^^xsd:string .
+
+<http://example.org/paper/2605.23861v1> a schema1:ScholarlyArticle ;
+    schema1:name "Leveraging Foundation Models for Causal Generative Modeling"^^xsd:string .
+
+<http://example.org/paper/2605.23893v1> a schema1:ScholarlyArticle ;
+    ex:has_topic_assignment [ a ex:TopicAssignment ;
+            ex:assigns_topic <http://example.org/topic/Machine_Learning> ;
+            ex:probability_score "0.7555"^^xsd:float ] ;
+    schema1:name "Complete-muE: Optimal Hyperparameter Transfer and Scaling for MoE Models"^^xsd:string .
+
+<http://example.org/topic/Computer_Vision> a skos:Concept ;
+    skos:prefLabel "Computer Vision" .
+
+<http://example.org/topic/Natural_Language_Processing> a skos:Concept ;
+    skos:prefLabel "Natural Language Processing" .
+
+<http://example.org/topic/Open_Science> a skos:Concept ;
+    skos:prefLabel "Open Science" .
+
+<http://example.org/topic/Data_Science> a skos:Concept ;
+    skos:prefLabel "Data Science" .
+
+<http://example.org/topic/Machine_Learning> a skos:Concept ;
+    skos:prefLabel "Machine Learning" .
+
