@@ -25,8 +25,8 @@ def get_paper_info_from_arxiv(id):
             institutions = []
             for inst in authorship.get("institutions", []) or []:
                 inst_name = inst.get("display_name")
+                country = inst.get("country") or {}
                 country_code = inst.get("country_code")
-                country = inst.get("country")
                 country_code = country.get("country_code") or country.get("iso_code") or country_code
 
                 institutions.append({

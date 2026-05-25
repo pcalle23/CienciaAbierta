@@ -20,7 +20,7 @@ class AIProcessor:
         # Tópicos predefinidos de ejemplo basados en IA y Ciencia
         self.candidate_topics = [
             "Machine Learning", "Natural Language Processing", "Computer Vision",
-            "Data Science", "Open Science", "Robotics", "Bioinformatics", "Cloud Computing"
+            "Data Science", "Open Science", "Robotics", "Bioinformatics", "Cloud Computing", "Physics", "Chemistry"
         ]
         print("Modelos cargados correctamente.")
 
@@ -44,18 +44,21 @@ class AIProcessor:
             "projects": set()
         }
         
-        for entity in results:
-            # Filtrar por un score de confianza (threshold)
-            if entity['score'] > 0.75:
-                if entity['entity_group'] == 'ORG':
-                    entities["organizations"].add(entity['word'])
-                elif entity['entity_group'] == 'PER':
-                    entities["persons"].add(entity['word'])
-                elif entity['entity_group'] == 'MISC': # A menudo los proyectos caen aquí
-                    entities["projects"].add(entity['word'])
-                    
-        # Convertir sets a listas para retornarlo
-        return {k: list(v) for k, v in entities.items()}
+        filtered_results = [entity for entity in results if entity['score'] > 0.85]
+        filtered_results.sort(key=lambda x: x['score'], reverse=True)
+
+        for entity in filtered_results:
+            if entity['entity_group'] == 'ORG' and len(entity['word']) > 1:
+                entities["organizations"].add(entity['word'])
+            elif entity['entity_group'] == 'PER':
+                entities["persons"].add(entity['word'])
+            elif entity['entity_group'] == 'MISC': # A menudo los proyectos caen aquí
+                entities["projects"].add(entity['word'])
+
+        return {
+            key: list(value)[:5]
+            for key, value in entities.items()
+        }
 
     def assign_topics(self, abstract):
         """
@@ -66,16 +69,27 @@ class AIProcessor:
             
         result = self.topic_pipeline(abstract, self.candidate_topics, multi_label=True)
         
-        # Emparejar cada tópico con su probabilidad (score)
-        topics_with_scores = []
-        for label, score in zip(result['labels'], result['scores']):
-            if score > 0.6: # Threshold para considerar que pertenece al topic
-                topics_with_scores.append({
-                    "topic": label,
-                    "probability": round(score, 4)
-                })
-                
-        return topics_with_scores
+        ranked_topics = [
+            {"topic": label, "probability": round(score, 4)}
+            for label, score in sorted(
+                zip(result['labels'], result['scores']),
+                key=lambda item: item[1],
+                reverse=True,
+            )
+            if score > 0.6
+        ]
+
+        unique_topics = []
+        seen_topics = set()
+        for topic in ranked_topics:
+            if topic["topic"] in seen_topics:
+                continue
+            seen_topics.add(topic["topic"])
+            unique_topics.append(topic)
+            if len(unique_topics) == 5:
+                break
+
+        return unique_topics
 
     def compute_similarity(self, abstract_1, abstract_2):
         """

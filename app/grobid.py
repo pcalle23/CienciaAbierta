@@ -17,9 +17,7 @@ def process_pdf_with_grobid(pdf_path, client: GrobidClient):
         Dictionary with extracted information: {
             'title': str,
             'abstract': str,
-            'figures_count': int,
-            'links': list of str
-        }
+            'acknowledgement': str}
     """
     # Process PDF with GROBID client
     xml_content = client.process_pdf( service="processFulltextDocument",
@@ -62,6 +60,7 @@ def extract_paper_info(xml_content):
     ack_text = ""
     if ack_elem is not None:
         ack_text = ''.join(ack_elem.itertext()).strip()
+        ack_text = ack_text.replace("ACKNOWLEDGEMENT", "").replace("Acknowledgement", "").replace("Acknowledgements", "").strip()
     
     return {
         'title': title,
