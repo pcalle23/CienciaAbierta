@@ -1,0 +1,275 @@
+@prefix kg: <https://researchmap.es/ontology#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+#################################################################
+# ONTOLOGY METADATA
+#################################################################
+
+<https://researchmap.es/ontology>
+    a owl:Ontology ;
+    rdfs:label "Global Research Mapping Ontology" ;
+    rdfs:comment "Ontology for representing scientific publications, authors, organizations, projects, topics and semantic similarity relationships extracted from OpenAlex, ORCID and Wikidata." ;
+    owl:versionInfo "1.1" .
+
+#################################################################
+# CLASSES
+#################################################################
+
+kg:Paper a owl:Class ;
+    rdfs:label "Paper" ;
+    rdfs:comment "Scientific publication analyzed by the system." .
+
+kg:Person a owl:Class ;
+    rdfs:label "Person" ;
+    rdfs:comment "Researcher or author associated with a publication." .
+
+kg:Organization a owl:Class ;
+    rdfs:label "Organization" ;
+    rdfs:comment "Institution, university or funding organization extracted from Wikidata." .
+
+kg:Project a owl:Class ;
+    rdfs:label "Project" ;
+    rdfs:comment "Research project acknowledged by a publication." .
+
+kg:Topic a owl:Class ;
+    rdfs:label "Topic" ;
+    rdfs:comment "Latent or semantic research topic extracted from publications." .
+
+kg:Country a owl:Class ;
+    rdfs:label "Country" ;
+    rdfs:comment "Country entity associated with an organization." .
+
+#################################################################
+# N-ARY RELATION CLASSES
+#################################################################
+
+kg:BelongsToTopicRelation a owl:Class ;
+    rdfs:label "Belongs To Topic Relation" ;
+    rdfs:comment "N-ary relation representing the probability that a paper belongs to a topic." .
+
+kg:SimilarityRelation a owl:Class ;
+    rdfs:label "Similarity Relation" ;
+    rdfs:comment "N-ary relation representing semantic similarity between two papers with a confidence score." .
+
+kg:AcknowledgementRelation a owl:Class ;
+    rdfs:label "Acknowledgement Relation" ;
+    rdfs:comment "Ternary relation representing acknowledgements between papers, persons, organizations and projects." .
+
+#################################################################
+# OBJECT PROPERTIES
+#################################################################
+
+### Authorship & Affiliation
+
+kg:hasAuthor a owl:ObjectProperty ;
+    rdfs:domain kg:Paper ;
+    rdfs:range kg:Person ;
+    rdfs:label "has author" .
+
+kg:affiliatedWith a owl:ObjectProperty ;
+    rdfs:domain kg:Person ;
+    rdfs:range kg:Organization ;
+    rdfs:label "affiliated with" .
+
+kg:country a owl:ObjectProperty ;
+    rdfs:domain kg:Organization ;
+    rdfs:range kg:Country ;
+    rdfs:label "country" ;
+    rdfs:comment "Links an organization to its country." .
+
+#################################################################
+# BELONGS TO TOPIC (N-ARY)
+#################################################################
+
+kg:hasTopicAssignment a owl:ObjectProperty ;
+    rdfs:domain kg:Paper ;
+    rdfs:range kg:BelongsToTopicRelation ;
+    rdfs:label "has topic assignment" .
+
+kg:assignedTopic a owl:ObjectProperty ;
+    rdfs:domain kg:BelongsToTopicRelation ;
+    rdfs:range kg:Topic ;
+    rdfs:label "assigned topic" .
+
+kg:assignedPaper a owl:ObjectProperty ;
+    rdfs:domain kg:BelongsToTopicRelation ;
+    rdfs:range kg:Paper ;
+    rdfs:label "assigned paper" .
+
+#################################################################
+# SIMILARITY RELATION (N-ARY)
+#################################################################
+
+kg:hasSimilarityRelation a owl:ObjectProperty ;
+    rdfs:domain kg:Paper ;
+    rdfs:range kg:SimilarityRelation ;
+    rdfs:label "has similarity relation" .
+
+kg:sourcePaper a owl:ObjectProperty ;
+    rdfs:domain kg:SimilarityRelation ;
+    rdfs:range kg:Paper ;
+    rdfs:label "source paper" .
+
+kg:targetPaper a owl:ObjectProperty ;
+    rdfs:domain kg:SimilarityRelation ;
+    rdfs:range kg:Paper ;
+    rdfs:label "target paper" .
+
+#################################################################
+# ACKNOWLEDGEMENT RELATION (TERNARY/N-ARY)
+#################################################################
+
+kg:hasAcknowledgement a owl:ObjectProperty ;
+    rdfs:domain kg:Paper ;
+    rdfs:range kg:AcknowledgementRelation ;
+    rdfs:label "has acknowledgement" .
+
+kg:acknowledgesPerson a owl:ObjectProperty ;
+    rdfs:domain kg:AcknowledgementRelation ;
+    rdfs:range kg:Person ;
+    rdfs:label "acknowledges person" .
+
+kg:acknowledgesOrganization a owl:ObjectProperty ;
+    rdfs:domain kg:AcknowledgementRelation ;
+    rdfs:range kg:Organization ;
+    rdfs:label "acknowledges organization" .
+
+kg:acknowledgesProject a owl:ObjectProperty ;
+    rdfs:domain kg:AcknowledgementRelation ;
+    rdfs:range kg:Project ;
+    rdfs:label "acknowledges project" .
+
+kg:acknowledgementPaper a owl:ObjectProperty ;
+    rdfs:domain kg:AcknowledgementRelation ;
+    rdfs:range kg:Paper ;
+    rdfs:label "acknowledgement paper" .
+
+#################################################################
+# DATATYPE PROPERTIES
+#################################################################
+
+### PAPER
+
+kg:title a owl:DatatypeProperty ;
+    rdfs:domain kg:Paper ;
+    rdfs:range xsd:string ;
+    rdfs:label "title" .
+
+kg:publicationDate a owl:DatatypeProperty ;
+    rdfs:domain kg:Paper ;
+    rdfs:range xsd:date ;
+    rdfs:label "publication date" .
+
+kg:citedByCount a owl:DatatypeProperty ;
+    rdfs:domain kg:Paper ;
+    rdfs:range xsd:integer ;
+    rdfs:label "cited by count" ;
+    rdfs:comment "Citation count extracted from OpenAlex/SemOpenAlex." .
+
+#################################################################
+# PERSON
+
+kg:name a owl:DatatypeProperty ;
+    rdfs:domain kg:Person ;
+    rdfs:range xsd:string ;
+    rdfs:label "name" .
+
+kg:orcid a owl:DatatypeProperty ;
+    rdfs:domain kg:Person ;
+    rdfs:range xsd:string ;
+    rdfs:label "ORCID identifier" .
+
+kg:hasConcept a owl:DatatypeProperty ;
+    rdfs:domain kg:Person ;
+    rdfs:range xsd:string ;
+    rdfs:label "has concept" ;
+    rdfs:comment "Concepts extracted from OpenAlex/SemOpenAlex, now associated with the Person." .
+
+#################################################################
+# ORGANIZATION
+
+kg:officialName a owl:DatatypeProperty ;
+    rdfs:domain kg:Organization ;
+    rdfs:range xsd:string ;
+    rdfs:label "official name" .
+
+kg:organizationType a owl:DatatypeProperty ;
+    rdfs:domain kg:Organization ;
+    rdfs:range xsd:string ;
+    rdfs:label "organization type" ;
+    rdfs:comment "Equivalent to Wikidata property wdt:P31." .
+
+#################################################################
+# COUNTRY
+
+kg:countryName a owl:DatatypeProperty ;
+    rdfs:domain kg:Country ;
+    rdfs:range xsd:string ;
+    rdfs:label "country name" .
+
+kg:countryCode a owl:DatatypeProperty ;
+    rdfs:domain kg:Country ;
+    rdfs:range xsd:string ;
+    rdfs:label "country code" .
+
+#################################################################
+# PROJECT
+
+kg:projectId a owl:DatatypeProperty ;
+    rdfs:domain kg:Project ;
+    rdfs:range xsd:string ;
+    rdfs:label "project identifier" .
+
+#################################################################
+# TOPIC
+
+kg:topicModel a owl:DatatypeProperty ;
+    rdfs:domain kg:Topic ;
+    rdfs:range xsd:string ;
+    rdfs:label "topic model" .
+
+#################################################################
+# N-ARY RELATION PROPERTIES
+#################################################################
+
+kg:probability a owl:DatatypeProperty ;
+    rdfs:domain kg:BelongsToTopicRelation ;
+    rdfs:range xsd:float ;
+    rdfs:label "probability" ;
+    rdfs:comment "Probability that a paper belongs to a topic." .
+
+kg:similarityScore a owl:DatatypeProperty ;
+    rdfs:domain kg:SimilarityRelation ;
+    rdfs:range xsd:float ;
+    rdfs:label "similarity score" ;
+    rdfs:comment "Probability or confidence score representing similarity between two papers." .
+
+#################################################################
+# OPTIONAL IDENTITY / LINKING PROPERTIES
+#################################################################
+
+kg:wikidataEntity a owl:DatatypeProperty ;
+    rdfs:domain kg:Organization ;
+    rdfs:range xsd:anyURI ;
+    rdfs:label "Wikidata entity URI" .
+
+kg:openAlexId a owl:DatatypeProperty ;
+    rdfs:domain kg:Paper ;
+    rdfs:range xsd:string ;
+    rdfs:label "OpenAlex identifier" .
+
+#################################################################
+# EXAMPLE SEMANTIC NOTES
+#################################################################
+
+kg:BelongsToTopicRelation rdfs:comment
+    "This class implements an n-ary relation because the probability value cannot be correctly represented using a simple binary relation between Paper and Topic." .
+
+kg:SimilarityRelation rdfs:comment
+    "This class models similarity as an n-ary relation between two papers plus a similarity/confidence score." .
+
+kg:AcknowledgementRelation rdfs:comment
+    "This class models acknowledgements as a ternary/n-ary relation involving papers, persons, organizations and projects." .
