@@ -38,5 +38,5 @@ jobs:
       # 5. Validación de arranque de los scripts principales
       - name: Validar compilación de los módulos clave
         run: |
-          python -m py_compile main.py
-          python -m py_compile app.py
+          python -m py_compile app/main.py
+          python -m py_compile app/app.py
