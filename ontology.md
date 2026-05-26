@@ -4,27 +4,28 @@
 
 La aplicación se utiliza para visualizar un mapa interactivo de la investigación global a partir de los artículos científicos analizados. El objetivo principal es descubrir los flujos de financiación, las temáticas emergentes y las redes de colaboración internacional en la investigación.
 
-- **Caso de uso principal:** Permitir a investigadores, instituciones o agencias evaluadoras identificar rápidamente qué organismos (gubernamentales o privados) están financiando los proyectos más relevantes en una temática concreta (_topics_), y visualizar mediante un mapa qué países y organizaciones lideran dichas líneas de investigación. Esto facilita de manera directa la búsqueda de socios estratégicos y la identificación de futuras fuentes de financiación.
+- **Caso de uso principal:** Permitir a investigadores, instituciones o agencias evaluadoras identificar rápidamente qué organismos (gubernamentales o privados) están financiando los proyectos más relevantes en una temática concreta (_topics_), y visualizar qué países y organizaciones lideran dichas líneas de investigación. Esto facilita de manera directa la búsqueda de socios estratégicos y la identificación de futuras fuentes de financiación.
 
 ---
 
-## 📚 Reutilización de Vocabularios Estándar
+## 📚 Ontología extendida
 
-Para garantizar la interoperabilidad y cumplir con las buenas prácticas de la Web Semántica y la Ciencia Abierta, la ontología extiende y reutiliza clases de vocabularios estándar consolidados:
+Para generar el grafo de conocimiento local, se ha diseñado una ontología que incluye las siguientes clases y propiedades:
 
-- **Paper:** `schema:ScholarlyArticle` / `fabio:ResearchPaper`
-- **Person (Author):** `foaf:Person` / `schema:Person`
-- **Organization:** `org:Organization` / `schema:Organization`
-- **Project:** `foaf:Project` / `schema:ResearchProject`
-- **Topic:** `skos:Concept`
+- **Paper**: Representa un artículo científico. Propiedades: `title`, `publicationDate`, `citedByCount`, `id` (arxiv u openalex).
+- **Person**: Representa a un autor. Propiedades: `name`, `orcid`, `keyword` (tópico de investigación).
+- **Organization**: Representa una institución. Propiedades: `officialName`, `organizationType`, `wikidataEntity` (URI de Wikidata).
+- **Country**: Representa un país. Propiedades: `countryName`, `countryCode`.
+- **Project**: Representa un proyecto de investigación. Propiedades: `projectId`.
+- **Topic**: Representa un tema de investigación. Propiedades: `topicModel`.
 
 ---
 
 ## ⚙️ Flujo de Trabajo del Pipeline
 
 1. **Ingesta:** El sistema recibe un identificador de publicación inicial (como un arXiv ID o el procesamiento directo del PDF con Grobid) para aislar los metadatos estructurales básicos.
-2. **Enriquecimiento Semántico:** Utilizando consultas estructuradas a las APIs de **OpenAlex** y **SemOpenAlex**, se recupera el número de citas globales (`citedByCount`), fechas de publicación y el listado completo de autores junto con sus respectivos identificadores normalizados **ORCID**.
-3. **Contextualización Institucional:** Se itera sobre las afiliaciones de los autores y se realizan consultas a la API de **Wikidata** para obtener las URIs oficiales de las organizaciones, sus tipos de entidad (`wdt:P31`) y los datos geopolíticos del país de origen.
+2. **Enriquecimiento Semántico:** Utilizando consultas estructuradas a las APIs de **OpenAlex**, se recupera el número de citas globales (`citedByCount`), fechas de publicación y el listado completo de autores junto con sus respectivos identificadores normalizados **ORCID**.
+3. **Contextualización Institucional:** Se itera sobre las afiliaciones de los autores y se realizan consultas a la API de **Wikidata** para obtener las URIs oficiales de las organizaciones, el tipo de organización (`wdt:P31`) y el país de origen.
 4. **Procesamiento de Texto con IA (Hugging Face):** Se analizan los _Abstracts_ de los artículos mediante un modelo de lenguaje para realizar clasificación _Zero-Shot_, asignando tópicos conceptuales con una puntuación de probabilidad.
 5. **Reconocimiento de Entidades Financieras (NER):** Se procesa el texto de la sección de agradecimientos (_Acknowledgements_) mediante un modelo Transformer especializado en extracción de entidades para identificar de forma automatizada personas, proyectos y organizaciones financiadoras.
 6. **Análisis de Similitud:** Se generan vectores de características (_embeddings_) de los textos para calcular la similitud semántica cruzada entre los artículos del dataset bajo un umbral (_threshold_) determinado.
@@ -43,13 +44,13 @@ erDiagram
         string title
         date publicationDate
         integer citedByCount
-        string openAlexId
+        string id
     }
 
     Person {
         string name
         string orcid
-        string hasConcept
+        string keyword
     }
 
     Organization {

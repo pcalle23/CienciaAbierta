@@ -1,5 +1,7 @@
 # Artificial Intelligence And Open Science In Research Software Engineering
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20401134.svg)](https://doi.org/10.5281/zenodo.20401134)
+
 ## Miembros
 
 | Nº  | Nombre                    | Usuario GitHub |
@@ -50,7 +52,7 @@ pip install -r requirements.txt
 Es necesario iniciar el motor de extracción de PDFs y la base de datos en grafo. Abra una terminal y ejecute:
 
 # Servidor Grobid (Puerto 8070)
-docker run -d --rm --name grobid -p 8070:8070 lfoppiano/grobid:0.8.1
+docker run -d --rm --name grobid -p 8070:8070 lfoppiano/grobid:0.8.2
 
 # Servidor Apache Jena Fuseki (Puerto 3030)
 docker run -d --name fuseki -p 3030:3030 -e ADMIN_PASSWORD=admin secoresearch/fuseki
@@ -59,10 +61,11 @@ docker run -d --name fuseki -p 3030:3030 -e ADMIN_PASSWORD=admin secoresearch/fu
 ### 3. Ejecutar el Pipeline de IA (Generación del Grafo)
 
 ```
-Ejecute el script principal para procesar los PDFs de la carpeta dataset/ y generar el archivo knowledge_graph.ttl.
+Para cargar los datos de los artículos científicos, es necesario que estos tengan como nombre su identificador de arXiv (por ejemplo, 1234.12345.pdf) otra opción es usar el identificador propio de OpenAlex (W123456) y estén ubicados en la carpeta `dataset/`. Luego, ejecute el script principal para procesar los PDFs de la carpeta dataset/ y generar el archivo knowledge_graph.ttl.
 ```
 
 ```bash
+cd app
 python main.py
 ```
 
@@ -73,7 +76,7 @@ Acceda a http://localhost:3030 (Usuario: admin, Contraseña: admin).
 
 Vaya a Manage datasets -> Add new dataset.
 
-Nombre: ds | Tipo: In-memory (o Persistent).
+Nombre: graph | Tipo: In-memory (o Persistent).
 
 Suba el archivo knowledge_graph.ttl generado en el paso anterior.
 ```
@@ -90,7 +93,8 @@ python -m streamlit run app.py
 
 ```
 📊 Demostración del Caso de Uso
-La interfaz gráfica expone con éxito las entidades clave y temáticas más conectadas en el grafo, permitiendo comprobar la correcta integración semántica de los artículos científicos:
+La interfaz gráfica expone varios gráficos y tablas que permiten explorar los datos del grafo. Por ejemplo, se puede visualizar los países y sus proyectos, filtrar por un tópico específico, ver las redes de colaboración entre instituciones y obtener toda la información de un artículo.
+```:
 
 Usos de IA en el desarrollo
 Se ha utilizado Inteligencia Artificial como asistencia para:
@@ -98,4 +102,6 @@ Se ha utilizado Inteligencia Artificial como asistencia para:
 Asegurar que las propiedades no son redundantes entre ellas y son coherentes con el diagrama.
 
 Asegurar que las relaciones entre las entidades son correctas.
+
+Asistencia en la generación del código.
 ```
