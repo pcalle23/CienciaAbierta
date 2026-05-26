@@ -74,6 +74,12 @@ kg:affiliatedWith a owl:ObjectProperty ;
     rdfs:range kg:Organization ;
     rdfs:label "affiliated with" .
 
+kg:addressCountry a owl:ObjectProperty ;
+    rdfs:domain kg:Person ;
+    rdfs:range kg:Country ;
+    rdfs:label "address country" ;
+    rdfs:comment "Links a researcher to the country obtained from ORCID address information." .
+
 kg:country a owl:ObjectProperty ;
     rdfs:domain kg:Organization ;
     rdfs:range kg:Country ;
@@ -187,6 +193,12 @@ kg:hasConcept a owl:DatatypeProperty ;
     rdfs:range xsd:string ;
     rdfs:label "has concept" ;
     rdfs:comment "Concepts extracted from OpenAlex/SemOpenAlex, now associated with the Person." .
+
+kg:addressCountry a owl:DatatypeProperty ;
+    rdfs:domain kg:Person ;
+    rdfs:range xsd:string ;
+    rdfs:label "address country" ;
+    rdfs:comment "Country extracted from the author's ORCID address information." .
 
 #################################################################
 # ORGANIZATION
