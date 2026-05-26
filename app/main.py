@@ -74,6 +74,8 @@ def enrich_papers_data(papers_data, ai):
                     wd_id = get_wikidata_id(org_name)
                     if wd_id:
                         wd_info = get_organization_info(wd_id)
+                        if wd_info.get("organization_type"):
+                            paper_record["organization_info"][org_name]["organization_type"] = wd_info["organization_type"]
                         if wd_info.get("country"):
                             paper_record["organization_info"][org_name]["country"] = wd_info["country"]
                 except Exception as e:
@@ -81,12 +83,21 @@ def enrich_papers_data(papers_data, ai):
 
             paper_record["acknowledged_persons"] = entities.get("persons", [])
 
+            for author in paper_record["authors"]:
+                if author.get("orcid"):
+                    try:
+                        orcid_data = get_author_info(author["orcid"])
+                        if orcid_data.get("keywords"):
+                            author["keywords"] = orcid_data["keywords"]
+                    except Exception as e:
+                        print(f"    ✗ No se pudieron obtener keywords de ORCID para {author.get('orcid')}: {e}")
+
         enriched_papers.append(paper_record)
 
     return enriched_papers
 
 
-def compute_similarity_links(papers_data, ai, threshold=0.65):
+def compute_similarity_links(papers_data, ai):
     similarity_links = []
 
     print("\n[Paso 2.5] Calculando similitud semántica entre artículos...")
@@ -98,17 +109,16 @@ def compute_similarity_links(papers_data, ai, threshold=0.65):
             if abs1 and abs2:
                 sim_score = ai.compute_similarity(abs1, abs2)
 
-                if sim_score > threshold:
-                    id_x = papers_data[x].get("paper_id", str(x))
-                    id_y = papers_data[y].get("paper_id", str(y))
-                    similarity_links.append(
-                        {
-                            "source_paper_id": id_x,
-                            "target_paper_id": id_y,
-                            "similarity_score": sim_score,
-                        }
-                    )
-                    print(f"    ✓ Conectados Paper {id_x} y Paper {id_y} (Similitud: {sim_score})")
+                id_x = papers_data[x].get("paper_id", str(x))
+                id_y = papers_data[y].get("paper_id", str(y))
+                similarity_links.append(
+                    {
+                        "source_paper_id": id_x,
+                        "target_paper_id": id_y,
+                        "similarity_score": sim_score,
+                    }
+                )
+                print(f"    ✓ Conectados Paper {id_x} y Paper {id_y} (Similitud: {sim_score})")
 
     return similarity_links
 

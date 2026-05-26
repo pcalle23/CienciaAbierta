@@ -36,6 +36,21 @@ def build_knowledge_graph(papers_data, similarity_links=None, output_file="knowl
             if author.get("orcid"):
                 g.add((author_uri, KG.orcid, Literal(author["orcid"])))
 
+            author_country = author.get("country")
+            if author_country and author_country != "Unknown":
+                country_value = author_country.replace("https://orcid.org/", "").strip()
+                country_uri = URIRef(f"http://example.org/country/{country_value.replace(' ', '_')}")
+                g.add((country_uri, RDF.type, KG.Country))
+                if len(country_value) == 2 and country_value.isalpha():
+                    g.add((country_uri, KG.countryCode, Literal(country_value.upper())))
+                else:
+                    g.add((country_uri, KG.countryName, Literal(country_value)))
+                g.add((author_uri, KG.addressCountry, country_uri))
+
+            for keyword in author.get("keywords", []):
+                if keyword:
+                    g.add((author_uri, KG.hasConcept, Literal(keyword)))
+
             g.add((paper_uri, KG.hasAuthor, author_uri))
 
             for institution in author.get("institutions", []):
@@ -47,6 +62,10 @@ def build_knowledge_graph(papers_data, similarity_links=None, output_file="knowl
                 g.add((organization_uri, RDF.type, KG.Organization))
                 g.add((organization_uri, KG.officialName, Literal(institution_name)))
                 g.add((author_uri, KG.affiliatedWith, organization_uri))
+
+                organization_type = institution.get("organization_type")
+                if organization_type:
+                    g.add((organization_uri, KG.organizationType, Literal(organization_type)))
 
                 country_code = institution.get("country_code")
                 if country_code:
@@ -78,6 +97,10 @@ def build_knowledge_graph(papers_data, similarity_links=None, output_file="knowl
             org_uri = URIRef(f"http://example.org/organization/{org_name.replace(' ', '_')}")
             g.add((org_uri, RDF.type, KG.Organization))
             g.add((org_uri, KG.officialName, Literal(org_name)))
+
+            organization_type = paper.get("organization_info", {}).get(org_name, {}).get("organization_type")
+            if organization_type:
+                g.add((org_uri, KG.organizationType, Literal(organization_type)))
 
             acknowledgement_node = BNode()
             g.add((acknowledgement_node, RDF.type, KG.AcknowledgementRelation))
@@ -120,6 +143,7 @@ def build_knowledge_graph(papers_data, similarity_links=None, output_file="knowl
         g.add((sim_node, KG.targetPaper, uri_y))
         g.add((sim_node, KG.similarityScore, Literal(score, datatype=XSD.float)))
         g.add((uri_x, KG.hasSimilarityRelation, sim_node))
+        g.add((uri_y, KG.hasSimilarityRelation, sim_node))
 
     g.serialize(destination=output_file, format="turtle")
     print(f"\n[Paso 3] ¡ÉXITO TOTAL! Grafo completo guardado en: {output_file}")
