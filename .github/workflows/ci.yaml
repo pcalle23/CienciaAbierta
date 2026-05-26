@@ -1,0 +1,42 @@
+name: Integración Continua (Open Science CI)
+
+on:
+  push:
+    branches: ["main", "master"]
+  pull_request:
+    branches: ["main", "master"]
+
+jobs:
+  build-and-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout del código
+        uses: actions/checkout@v4
+
+      - name: Configurar Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      # 3. Instala las dependencias del proyecto
+      - name: Instalar dependencias
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+      # 4. Verificación de calidad de código
+      - name: Comprobar errores de sintaxis en Python
+        run: |
+          pip install flake8
+          # Detiene el proceso si hay errores de sintaxis graves o variables no definidas
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+          # Las advertencias de estilo no detienen el proceso (para no bloquearos)
+          flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+
+      # 5. Validación de arranque de los scripts principales
+      - name: Validar compilación de los módulos clave
+        run: |
+          python -m py_compile main.py
+          python -m py_compile app.py
